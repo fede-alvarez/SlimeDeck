@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - CardsInteraction
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Decoration
+    uniqueID: 4087215771
+    locked: 0
+  - name: Entities
+    uniqueID: 890687699
+    locked: 0
+  - name: Cards
+    uniqueID: 1664277059
+    locked: 0
+  - name: Foreground
+    uniqueID: 2035138129
+    locked: 0
+  - name: UI
+    uniqueID: 1550937763
+    locked: 0
+  m_RenderingLayers:
+  - Default
