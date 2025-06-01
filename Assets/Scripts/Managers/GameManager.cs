@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
             Animator animator = enemiesContainer.GetChild(i).GetComponent<Animator>();
             if (animator) animator.SetTrigger("Attack");
             
-            playerHp.Damage(UnityEngine.Random.Range(4,8));
+            playerHp.Damage(UnityEngine.Random.Range(3,6));
             yield return new WaitForSeconds(1.0f);
         }
         

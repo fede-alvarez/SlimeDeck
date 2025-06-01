@@ -53,7 +53,7 @@ public class PlayersHand : MonoBehaviour
 
             //Debug.Log(index + " " + _cardsCount + " " + (float) index / (_cardsCount - 1));
             var curveEvaluation = handCurvature.Evaluate((float) index / (_cardsCount - 1));
-            var offPosition = (_cardsCount <= 3) ? 0 : curveEvaluation * 0.10f;
+            var offPosition = (_cardsCount <= 3) ? 0 : curveEvaluation * 0.0f;
             
             var cardPosX = _startPos + (index * _cardSize);
             
