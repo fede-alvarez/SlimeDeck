@@ -9,7 +9,7 @@ public class Map : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine("SelectNext", 0);
+        UnlockSpot(0);
     }
 
     private IEnumerator SelectNext(int index)
@@ -17,6 +17,11 @@ public class Map : MonoBehaviour
         UnselectSpots();
         yield return new WaitForEndOfFrame();
         SelectSpot(index);
+    }
+
+    public void UnlockSpot(int index)
+    {
+        StartCoroutine("SelectNext", index);
     }
 
     private void UnselectSpots()
@@ -28,7 +33,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    public void SelectSpot(int spotIndex)
+    private void SelectSpot(int spotIndex)
     {
         EnableSelect(spotIndex);
     }

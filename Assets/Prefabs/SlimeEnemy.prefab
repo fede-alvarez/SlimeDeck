@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2cd6909e9bc72a4fafac7284091012b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attacksContainer: {fileID: 0}
   simpleAttack: {fileID: 0}
   damagePrefab: {fileID: 1632945819772004531, guid: da70adeaba05866438173aea9c7bc1aa, type: 3}
   onDamage:
@@ -428,6 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6453991460703952172}
   - component: {fileID: 5983176993872798325}
+  - component: {fileID: 1647291532077163878}
   m_Layer: 0
   m_Name: SlimeEnemy
   m_TagString: Untagged
@@ -478,6 +480,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1647291532077163878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8210426899683532043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 853fc4dd73727224baba6a353bf92173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
 --- !u!1001 &5083615495070652099
 PrefabInstance:
   m_ObjectHideFlags: 0
