@@ -18,9 +18,12 @@ public class GameManager : MonoBehaviour
     public HPBar playerHp;
     public PlayersHand playersHand;
     public CardDeck cardDeck;
+
+    [Header("Cameras")] public Camera mainCamera;
     
-    [Header("Enemies Container")]
+    [Header("Enemies")]
     public Transform enemiesContainer;
+    public GameObject[] monsterPrefabs = new GameObject[2];
     
     [Header("Panels")]
     public GameObject pausePanel;
@@ -41,12 +44,16 @@ public class GameManager : MonoBehaviour
     private int _currentMapSpot = 0;
     private int _currentEnergy = 3;
     private bool _gameOver = false;
+    private bool _isShaking = false;
 
+    private Vector3 _startCameraPosition;
+    
     private Animator _damageVisionAnimator;
     
     private void Awake()
     {
         _damageVisionAnimator = damageVision.transform.GetComponent<Animator>();
+        _startCameraPosition = mainCamera.transform.position;
     }
 
     private IEnumerator Start()
@@ -61,13 +68,39 @@ public class GameManager : MonoBehaviour
         StartCoroutine("DealCards");
     }
 
+    private void Update()
+    {
+        if (!_isShaking) return;
+        
+        Vector3 newCameraPosition = mainCamera.transform.position;
+        newCameraPosition.x = Mathf.Lerp(_startCameraPosition.x, newCameraPosition.x + UnityEngine.Random.Range(1.0f, 2.0f), Time.deltaTime * 10.0f);
+        newCameraPosition.y = Mathf.Lerp(_startCameraPosition.y, newCameraPosition.y + UnityEngine.Random.Range(1.0f, 2.0f), Time.deltaTime * 10.0f);
+            
+        mainCamera.transform.position = new Vector3(newCameraPosition.x, newCameraPosition.y, mainCamera.transform.position.z);
+    }
+
+    public void StartShake()
+    {
+        StartCoroutine("ShakeCamera", 0.2f);
+    }
+
+    private IEnumerator ShakeCamera(float duration)
+    {
+        _isShaking = true;
+        yield return new WaitForSeconds(duration);
+        _isShaking = false;
+        mainCamera.transform.position = _startCameraPosition;
+    }
+    
     private IEnumerator DealCards()
     {
         for (int i = 0; i < playersHand.maxCards; i++)
         {
-            cardDeck.InstantiateCard();
+            cardDeck.InstantiateCard(i + 1);
             yield return new WaitForSeconds(0.15f);
         }
+        
+        endTurnButton.interactable = true;
     }
 
     public void SetDebugMode(bool value)
@@ -75,7 +108,7 @@ public class GameManager : MonoBehaviour
         debugMode = value;
     }
 
-    public void AreEnemiesDead()
+    private void AreEnemiesDead()
     {
         if (enemiesContainer.childCount == 0)
         {
@@ -86,6 +119,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ShowWinPanel()
     {
+        endTurnButton.interactable = false;
         yield return new WaitForSeconds(1.0f);
         gameWinPanel?.SetActive(true);
         yield return new WaitForSeconds(2.0f);
@@ -102,9 +136,31 @@ public class GameManager : MonoBehaviour
 
     public void GetNewEnemies()
     {
+        foreach (var enemy in enemiesContainer)
+        {
+            Destroy(enemy as GameObject);
+        }
+        CleanPlayersHand();
+
+        StartCoroutine("NewEnemiesSetup");
+    }
+
+    private IEnumerator NewEnemiesSetup()
+    {
+        yield return new WaitForEndOfFrame();
+        for (int i = 0; i < monsterPrefabs.Length; i++)
+        {
+            GameObject monster = (GameObject)Instantiate(monsterPrefabs[i], Vector3.zero, Quaternion.identity, enemiesContainer);
+            if (monster)
+            {
+                monster.transform.position = new Vector3(-3 * i + 1.0f, monster.transform.position.y - 1.3f, monster.transform.position.z);
+            }
+        }
+
         mapPanel.SetActive(false);
         _gameOver = false;
-        
+        yield return new WaitForSeconds(0.3f);
+        StartCoroutine("DealCards");
     }
     
     public void SubtractEnergy(int value)
@@ -220,8 +276,9 @@ public class GameManager : MonoBehaviour
     }
 
     public bool DebugMode => debugMode;
+    public Transform GetPlayersHandTransform => playersHand.gameObject.transform;
+    public PlayersHand GetPlayersHand => playersHand;
     public bool GameStarted { get; set; } = false;
-    
     public bool GameOver => _gameOver;
     public int CurrentEnergy => _currentEnergy;
     public int CurrentMapSpot => _currentMapSpot;

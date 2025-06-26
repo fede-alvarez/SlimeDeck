@@ -28,13 +28,14 @@ public class CardDeck : MonoBehaviour
         //InstantiateCard();
     }
 
-    public void InstantiateCard()
+    public void InstantiateCard(int index)
     {
         if (playersHand.childCount >= _maxCardsCount) return;
         
         _animator.SetTrigger("Press");
         GameObject card = Instantiate(cardPrefab, Vector3.zero, Quaternion.identity, playersHand);
         if (!card) return;
+        card.name = "Card_" + index;
         card.transform.localPosition = Vector3.zero;
         
         Card currentCard = card.GetComponent<Card>();

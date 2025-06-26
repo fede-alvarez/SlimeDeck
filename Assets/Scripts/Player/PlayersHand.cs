@@ -1,14 +1,14 @@
+using System;
 using UnityEngine;
 
 
 public class PlayersHand : MonoBehaviour
 {
-    public AnimationCurve handCurvature;
     public int maxCards = 3;
     
+    private const float CardSize = 1.8f;
     private int _cardsCount = 0;
-    private float _cardSize = 1.8f;
-
+    
     private float _startPos;
     
     private void Start()
@@ -43,24 +43,33 @@ public class PlayersHand : MonoBehaviour
     {
         if (_cardsCount <= 0) return;
         
-        _startPos = _cardsCount * _cardSize * -0.5f + (_cardSize * 0.5f);
+        _startPos = _cardsCount * CardSize * -0.5f + (CardSize * 0.5f);
         
         int index = 0;
         foreach (var card in transform)
         {
             var currentCard = (Transform) card;
             var cardPos = currentCard.position;
-
-            //Debug.Log(index + " " + _cardsCount + " " + (float) index / (_cardsCount - 1));
-            var curveEvaluation = handCurvature.Evaluate((float) index / (_cardsCount - 1));
-            var offPosition = (_cardsCount <= 3) ? 0 : curveEvaluation * 0.0f;
+            var cardPosX = _startPos + (index * CardSize);
             
-            var cardPosX = _startPos + (index * _cardSize);
-            
-            currentCard.position = new Vector3(cardPosX, cardPos.y + offPosition, cardPos.z);
+            currentCard.localPosition = new Vector3(cardPosX, 0, cardPos.z);
             currentCard.GetComponent<Card>().SetCardStartPosition();
             
             index++;
         }
+    }
+
+    public int GetCardIndex(Card card)
+    {
+        int index = 0;
+        foreach (Transform t in transform)
+        {
+            var currentCard = t.GetComponent<Card>();
+            if (card == currentCard)
+                return index;
+            index += 1;
+        }
+        
+        return -1;
     }
 }

@@ -1,12 +1,13 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Card : MonoBehaviour
 {
     [Header("Props")] 
     public int cardDamage = 1;
     public int cardEnergy = 1;
+
+    public AnimationCurve returnAnimationCurve;
     
     [Header("UI Elements")]
     public TMP_Text cardText;
@@ -17,21 +18,24 @@ public class Card : MonoBehaviour
     public Canvas textCanvas;
     public SpriteRenderer debugRenderer;
     
-    private Animator _animator;
-    private Vector3 _startPosition;
+    private const float ReturnSpeed = 0.2f;
     
-    private const float ReturnSpeed = 5.0f;
+    private Vector3 _startPosition;
+    private int _lastHierarchyPosition = 0;
     
     private bool _isDragging = false;
     private bool _isReturning = false;
-    
+
+    private PlayersHand _playersHand;
     private Camera _mainCamera;
+    private Animator _animator;
     
     private GameManager _gameManager;
     
     private void Awake()
     {
         _gameManager = FindAnyObjectByType<GameManager>();
+        _playersHand = _gameManager.GetPlayersHand;
         
         _animator = GetComponent<Animator>();
         _mainCamera = Camera.main;
@@ -77,9 +81,13 @@ public class Card : MonoBehaviour
     {
         transform.position = Vector3.Lerp(transform.position, _startPosition, ReturnSpeed * Time.deltaTime);
 
-        if (transform.position == _startPosition)
+        if (Vector3.Distance(transform.position, _startPosition) < 0.2f)
         {
             _isReturning = false;
+            transform.SetParent(_gameManager.GetPlayersHandTransform);
+            transform.SetSiblingIndex(_lastHierarchyPosition);
+            _gameManager.ReorderPlayersHand();
+            
         }
     }
 
@@ -108,6 +116,11 @@ public class Card : MonoBehaviour
     public void OnMouseDown()
     {
         if (!_gameManager.IsEnergyEnough(cardEnergy)) return;
+
+        _lastHierarchyPosition = _playersHand.GetCardIndex(this);
+        
+        transform.SetParent(null);
+        _gameManager.ReorderPlayersHand();
         
         _isDragging = true;
         _isReturning = false;

@@ -42,6 +42,7 @@ public class CardZone : MonoBehaviour
         
         // Shows DAMAGE number & Use CARD
         ShowFeedback();
+        _manager.StartShake();
         
         // Subtract energy
         _manager.SubtractEnergy(_selectedCard.cardEnergy);
