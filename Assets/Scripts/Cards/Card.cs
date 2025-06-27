@@ -18,7 +18,7 @@ public class Card : MonoBehaviour
     public Canvas textCanvas;
     public SpriteRenderer debugRenderer;
     
-    private const float ReturnSpeed = 0.2f;
+    private const float ReturnSpeed = 10f;
     
     private Vector3 _startPosition;
     private int _lastHierarchyPosition = 0;
